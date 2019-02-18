@@ -2,6 +2,7 @@ package employees.controllers;
 
 import employees.dao.EmployeeDao;
 import employees.models.Employee;
+import employees.services.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,16 +10,17 @@ import java.util.List;
 @RestController
 public class EmployeeController {
 
-    EmployeeDao employeeDao = new EmployeeDao();
+
+    EmployeeService employeeService = new EmployeeService();
 
     @GetMapping("/employee")
     public List<Employee> getAllEmployees(@RequestParam(name = "status", required = false) String status) {
-        return employeeDao.getAllEmployees(status);
+        return employeeService.retrieveAllEmployees(status);
     }
 
     @GetMapping("/employee/{id}")
     public Employee getById(@PathVariable Long id) {
-        return employeeDao.findEmployeeById(id);
+        return employeeService.retrieveEmployeeById(id);
     }
 
     @PostMapping("/employee")
@@ -31,14 +33,14 @@ public class EmployeeController {
 
         newEmployee.setStatus("A");
 
-        String result = employeeDao.addEmployee(newEmployee);
+        String result = employeeService.createEmployee(newEmployee);
 
         return result;
     }
 
     @PutMapping("/employee")
     public Employee updateEmployee(@RequestBody Employee employeeUpdateData){
-        Employee employeeToUpdate = employeeDao.findEmployeeById(employeeUpdateData.getId());
+        Employee employeeToUpdate = employeeService.retrieveEmployeeById(employeeUpdateData.getId());
 
         if(employeeUpdateData.getFirstName() != null)
             employeeToUpdate.setFirstName(employeeUpdateData.getFirstName());
@@ -49,16 +51,16 @@ public class EmployeeController {
         if(employeeUpdateData.getPhone() != null)
             employeeToUpdate.setPhone(employeeUpdateData.getPhone());
 
-        employeeDao.updateEmployee(employeeToUpdate);
+        employeeService.modifyEmmployee(employeeToUpdate);
         return employeeToUpdate;
     }
 
     @DeleteMapping("employee/{id}")
     public String deleteById(@PathVariable Long id){
-        Employee employeeToDelete = employeeDao.findEmployeeById(id);
+        Employee employeeToDelete = employeeService.retrieveEmployeeById(id);
 
         if(employeeToDelete != null){
-            String res = employeeDao.removeEmployee(id);
+            String res = employeeService.removeEmployee(id);
             return res;
         } else {
             return String.format("404. Employee with id = %s is not present", id);

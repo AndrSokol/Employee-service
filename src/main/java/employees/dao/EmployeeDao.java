@@ -24,7 +24,7 @@ public class EmployeeDao {
         return executeUpdateQuery(sql) == 1 ? "User created sucessfully" : "Something went wrong. See logs";
     }
 
-    public String removeEmployee(Long id) {
+    public String deleteEmployee(Long id) {
         String sql = String.format("update employee_service.employee set status = 'D' where id = %s", id);
 
         return executeUpdateQuery(sql)  == 1 ? "User " + id + " deleted sucessfully" : "Something went wrong. See logs";
@@ -34,9 +34,6 @@ public class EmployeeDao {
         String query = "Select * from employee_service.employee where id = " + employeeId;;
 
         Employee employee = executeSelectQuery(query).get(0);
-
-        // TODO: Create Service class for building employees?
-        employee.setContacts(new ContactDao().getContactsForEmployee(employeeId));
 
         return employee;
     }

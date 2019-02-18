@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ContactDao {
 
@@ -24,6 +25,7 @@ public class ContactDao {
         List<Contact> contactList = new ArrayList<>();
 
         try {
+            System.out.println(query);
             System.out.println("Creating statement...");
             stmt = DBhelper.getConnection().createStatement();
 
@@ -61,6 +63,8 @@ public class ContactDao {
     public static int executeUpdateQuery(String sqlQuery){
         int res = 0;
 
+        System.out.println(sqlQuery);
+
         try {
             System.out.println("Creating statement...");
             stmt = DBhelper.getConnection().createStatement();
@@ -96,5 +100,14 @@ public class ContactDao {
                 );
 
         return executeUpdateQuery(query) == 1 ? "Contact created sucessfully" : "Something went wrong. See logs";
+    }
+
+    public List<Contact> getAllContacts(List<String> employeeIds) {
+
+        String idsStr = employeeIds.stream().collect(Collectors.joining(", ", "", ""));
+
+        String query = String.format("Select * from employee_service.contact where employeeId in (%s)", idsStr);
+
+        return executeSelectQuery(query);
     }
 }
