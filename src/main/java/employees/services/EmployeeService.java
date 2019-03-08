@@ -4,15 +4,20 @@ import employees.dao.ContactDao;
 import employees.dao.EmployeeDao;
 import employees.models.Contact;
 import employees.models.Employee;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class EmployeeService {
 
-    EmployeeDao employeeDao = new EmployeeDao();
-    ContactDao contactDao = new ContactDao();
+    @Autowired
+    EmployeeDao employeeDao;
+
+    @Autowired
+    ContactDao contactDao;
 
     public List<Employee> retrieveAllEmployees(String status) {
         List<Employee> employeeList = employeeDao.getAllEmployees(status);
@@ -32,7 +37,7 @@ public class EmployeeService {
         return employeeList;
     }
 
-    private List<Contact> getContactsById(List<Contact> contactList, Long id){
+    private List<Contact> getContactsById(List<Contact> contactList, Long id) {
         return contactList.stream()
                 .filter(c -> c.getEmployeeId().equals(id))
                 .collect(Collectors.toList());

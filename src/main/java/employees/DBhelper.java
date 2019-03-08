@@ -1,11 +1,8 @@
 package employees;
 
-import employees.models.Employee;
-import org.springframework.beans.factory.annotation.Value;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DBhelper {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
@@ -16,7 +13,7 @@ public class DBhelper {
 
     static Connection conn = null;
 
-    public static Connection getConnection(){
+    public static Connection getConnection() {
         System.out.println("Connecting to DB...");
         try {
             Class.forName(JDBC_DRIVER);
@@ -29,15 +26,5 @@ public class DBhelper {
             e.printStackTrace();
         }
         return conn;
-    }
-
-    public static void closeConnection(){
-        try {
-            System.out.println("Close connecting to DB...");
-            conn.close();
-        } catch (SQLException e) {
-            System.out.println("Closing connection failed");
-            e.printStackTrace();
-        }
     }
 }

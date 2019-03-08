@@ -2,6 +2,7 @@ package employees.controllers;
 
 import employees.dao.ContactDao;
 import employees.models.Contact;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,7 +10,8 @@ import java.util.List;
 @RestController
 public class ContactController {
 
-    ContactDao contactDao = new ContactDao();
+    @Autowired
+    ContactDao contactDao;
 
     @GetMapping("employee/{id}/contact")
     public List<Contact> getContact(@PathVariable Long id){

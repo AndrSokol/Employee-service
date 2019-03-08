@@ -1,8 +1,8 @@
 package employees.controllers;
 
-import employees.dao.EmployeeDao;
 import employees.models.Employee;
 import employees.services.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,8 +10,8 @@ import java.util.List;
 @RestController
 public class EmployeeController {
 
-
-    EmployeeService employeeService = new EmployeeService();
+    @Autowired
+    EmployeeService employeeService;
 
     @GetMapping("/employee")
     public List<Employee> getAllEmployees(@RequestParam(name = "status", required = false) String status) {

@@ -2,16 +2,16 @@ package employees.dao;
 
 import employees.DBhelper;
 import employees.models.Employee;
+import org.springframework.stereotype.Component;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class EmployeeDao {
-
-    static Statement stmt = null;
 
     public String addEmployee(Employee newEmployee) {
         String sql = String.format("insert into employee_service.employee (firstName, lastName, phone, status)\n" +
@@ -31,11 +31,9 @@ public class EmployeeDao {
     }
 
     public Employee findEmployeeById(Long employeeId) {
-        String query = "Select * from employee_service.employee where id = " + employeeId;;
+        String query = "Select * from employee_service.employee where id = " + employeeId;
 
-        Employee employee = executeSelectQuery(query).get(0);
-
-        return employee;
+        return executeSelectQuery(query).get(0);
     }
 
     public List<Employee> getAllEmployees(String status) {
@@ -67,9 +65,9 @@ public class EmployeeDao {
     public static List<Employee> executeSelectQuery(String query){
         List<Employee> employeeList = new ArrayList<>();
 
-        try {
-            System.out.println("Creating statement...");
-            stmt = DBhelper.getConnection().createStatement();
+        try (Connection conn = DBhelper.getConnection();
+             Statement stmt = conn.createStatement()
+                ) {
 
             ResultSet rs = stmt.executeQuery(query);
 
@@ -84,20 +82,9 @@ public class EmployeeDao {
             }
 
             rs.close();
-            stmt.close();
-            DBhelper.closeConnection();
 
         } catch (Exception se) {
             se.printStackTrace();
-        }
-        finally {
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }
-            if (DBhelper.getConnection() != null)
-                DBhelper.closeConnection();
         }
         return employeeList;
     }
@@ -105,26 +92,14 @@ public class EmployeeDao {
     public static int executeUpdateQuery(String sqlQuery){
         int res = 0;
 
-        try {
-            System.out.println("Creating statement...");
-            stmt = DBhelper.getConnection().createStatement();
+        try (Connection conn = DBhelper.getConnection();
+             Statement stmt = conn.createStatement() ) {
 
             res = stmt.executeUpdate(sqlQuery);
             System.out.println("Inserted records into the table... " + res);
 
-            stmt.close();
-            DBhelper.closeConnection();
-
         } catch (Exception se) {
             se.printStackTrace();
-        } finally {
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (SQLException se2) {
-            }
-            if (DBhelper.getConnection() != null)
-                DBhelper.closeConnection();
         }
 
         return res;
