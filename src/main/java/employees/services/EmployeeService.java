@@ -45,6 +45,9 @@ public class EmployeeService {
 
     public Employee retrieveEmployeeById(Long id) {
         Employee employee = employeeDao.findEmployeeById(id);
+        if (employee == null){
+            return null;
+        }
         employee.setContacts(contactDao.getContactsForEmployee(id));
 
         return employee;

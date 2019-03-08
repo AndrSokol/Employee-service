@@ -31,9 +31,9 @@ public class EmployeeDao {
     }
 
     public Employee findEmployeeById(Long employeeId) {
-        String query = "Select * from employee_service.employee where id = " + employeeId;
-
-        return executeSelectQuery(query).get(0);
+        String query = "Select * from employee_service.employee where status = 'A' and id = " + employeeId;
+        List<Employee> employeeList = executeSelectQuery(query);
+        return employeeList.size() != 0 ? executeSelectQuery(query).get(0) : null;
     }
 
     public List<Employee> getAllEmployees(String status) {

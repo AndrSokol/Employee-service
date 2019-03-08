@@ -30,5 +30,4 @@ public class ContactController {
 
         return contactDao.createContact(contact);
     }
-
 }
